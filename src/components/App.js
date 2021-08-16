@@ -26,11 +26,29 @@ class App extends Component {
     });
   }
 
-  updatePost() {}
+  updatePost(id, text) {
+    axios
+      .put(`https://practiceapi.devmountain.com/api/posts?id=${id}`, { text })
+      .then((results) => {
+        this.setState({ posts: results.data });
+      });
+  }
 
-  deletePost() {}
+  deletePost(id) {
+    axios
+      .delete(`https://practiceapi.devmountain.com/api/posts?id=${id}`)
+      .then((res) => {
+        this.setState({ posts: res.data });
+      });
+  }
 
-  createPost() {}
+  createPost(text) {
+    axios
+      .post("https://practiceapi.devmountain.com/api/posts", { text })
+      .then((res) => {
+        this.setState({ posts: res.data });
+      });
+  }
 
   render() {
     const { posts } = this.state;
@@ -40,9 +58,17 @@ class App extends Component {
         <Header />
 
         <section className="App__content">
-          <Compose />
+          <Compose createPostFn={this.createPost} />
           {posts.map((post) => (
-            <Post key={post.id} />
+            <Post
+              key={post.id}
+              text={post.text}
+              date={post.date}
+              id={post.id}
+              updatePostFn={this.updatePost}
+              deletePostFn={this.deletePost}
+              createPostFn={this.createPost}
+            />
           ))}
         </section>
       </div>
